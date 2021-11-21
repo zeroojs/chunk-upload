@@ -1,0 +1,48 @@
+.upload-input {
+  display: none;
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.upload-box {
+  width: 100%;
+  min-height: 300px;
+  max-width: 500px;
+  border-radius: 6px;
+  border: var(--border-style);
+  box-shadow: 0 0 45px fade(@primary-color, 10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: lighter;
+  font-size: 36px;
+  letter-spacing: 10px;
+  color: var(--primary-color);
+  cursor: pointer;
+  span {
+    user-select: none;
+  }
+}
+
+.progress {
+  height: 10px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 45px;
+  border: 1px solid var(--primary-color);
+  border-radius: 5px;
+  box-sizing: border-box;
+  .progress-inner {
+    width: 0;
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: inherit;
+  }
+}
