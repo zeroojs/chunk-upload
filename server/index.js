@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: your project
+ * @version: 0.0.0
+ * @Author: Minyoung
+ * @Date: 2021-11-20 13:14:13
+ * @LastEditors: Minyoung
+ * @LastEditTime: 2022-01-30 10:24:33
+ */
 const fs = require('fs')
 const path = require('path')
 const app = require('express')()
@@ -69,7 +77,12 @@ function mergeFile(filename = '', hash = '') {
     fs.unlinkSync(filePath)
   })
   const buffer = Buffer.concat(filesBuffer)
-  fs.writeFileSync(resolve(`./resource/${filename}`), buffer)
+  const savePath = /mp4|mov/i.test(filename) ?
+  resolve(`./resource/videos/${filename}`)
+  :
+  resolve(`./resource/${filename}`)
+  // fs.writeFileSync(resolve(`./resource/${filename}`), buffer)
+  fs.writeFileSync(savePath, buffer)
 }
 app.post('/merge', (req, res) => {
   const { filename, hash } = req.body

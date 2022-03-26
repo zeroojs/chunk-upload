@@ -4,22 +4,37 @@ import { request } from './request'
 
 function bootstrap() {
   useUpload()
+  uploadContuine()
 }
 
 bootstrap()
 
 // 获取节点
 function querySelectors() {
+  const btnBox = document.querySelector('.btn')
   const uploadBox = document.querySelector('.upload-box')
   const uploadInput = document.querySelector('.upload-input')
   const progress = document.querySelector('.progress')
   const progressInner = progress.querySelector('.progress-inner')
   return {
+    btnBox,
     uploadBox,
     uploadInput,
     progress,
     progressInner
   }
+}
+
+// 继续上传
+function uploadContuine() {
+  const { btnBox, uploadInput, progressInner, uploadBox } = querySelectors()
+  btnBox.addEventListener('click', () => {
+    console.log(uploadInput.files)
+    uploadInput.value = ''
+    progressInner.style.width = '0'
+    uploadBox.querySelector('span').innerText = '点我上传'
+    uploadInput.click()
+  })
 }
 
 // 根据文件内容和后缀生成唯一hash
@@ -37,11 +52,13 @@ function genHASH(file) {
 
 // 上传逻辑
 function useUpload() {
-  const { uploadBox, uploadInput, progressInner } = querySelectors()
+  const { uploadBox, uploadInput, progressInner, btnBox } = querySelectors()
+  btnBox.style.display = 'none'
   uploadBox.addEventListener('click', () => uploadInput.click())
 
   uploadInput.addEventListener('change', async (e) => {
     progressInner.style.width = '0'
+    btnBox.style.display = 'none'
     // 获取文件
     const [file] = e.target.files
     const { name, size } = file
@@ -74,6 +91,7 @@ function useUpload() {
       complateIndex++
       // 进度条
       progressInner.style.width = `${complateIndex}%`
+      uploadBox.querySelector('span').innerText = '上传中'
       if (complateIndex < num) return
       console.log('请求合并切片')
       // 全部切片已上传，请求合并切片
@@ -87,6 +105,8 @@ function useUpload() {
           uploadInput.value = ''
           uploadBox.querySelector('span').innerText = '文件已上传'
           console.log('文件已上传')
+          progressInner.style.width = '100%'
+          btnBox.style.display = 'block'
         }
       })
     }
