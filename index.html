@@ -4,7 +4,7 @@
  * @Author: Minyoung
  * @Date: 2021-11-19 21:40:27
  * @LastEditors: Minyoung
- * @LastEditTime: 2022-01-30 20:28:16
+ * @LastEditTime: 2022-04-01 00:05:29
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -15,16 +15,18 @@
   <title>Chunk Upload</title>
 </head>
 <body>
-  <div class="container">
-    <div class="upload-box">
-      <span>点我上传</span>
+  <div class="app-header">
+    <div class="container">
+      <div class="upload-box">
+        <span>点我上传</span>
+      </div>
     </div>
-    <div class="progress">
-      <div class="progress-inner"></div>
-    </div>
-    <button class="btn">继续上传</button>
   </div>
-  <input class="upload-input" type="file">
+  <div class="container">
+    <ul class="upload-list">
+    </ul>
+  </div>
+  <input class="upload-input" type="file" multiple>
   <script src="//cdn.bootcdn.net/ajax/libs/eruda/2.3.3/eruda.js"></script>
   <script>eruda.init();</script>
 </body>

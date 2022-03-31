@@ -4,7 +4,7 @@
  * @Author: Minyoung
  * @Date: 2021-11-20 13:14:13
  * @LastEditors: Minyoung
- * @LastEditTime: 2022-01-30 10:24:33
+ * @LastEditTime: 2022-04-01 00:49:46
  */
 const fs = require('fs')
 const path = require('path')
@@ -22,6 +22,17 @@ app.use(parseUrlencoded({ extended: false })) // 解析 application/x-www-form-u
 app.use(parseJSON()) // 解析 application/json 格式的请求
 app.use(cors())
 
+const listJsonPath = path.resolve(__dirname, './resource/db/list.json')
+const listJson = fs.readFileSync(listJsonPath, { encoding: 'utf-8' })
+// 查询文件列表
+app.get('/file-list', (req, res) => {
+  const filesName = fs.readdirSync(path.resolve(__dirname, './resource'))
+  let list = JSON.parse(listJson)
+  list = list.filter(item => filesName.includes(item))
+  fs.writeFileSync(listJsonPath, JSON.stringify(list))
+  res.send({ code: 1, data: list })
+})
+
 // 查询hash列表
 app.get('/chunks', (req, res) => {
   const files = fs.readdirSync(resolve('./resource'))
@@ -35,9 +46,6 @@ app.get('/chunks', (req, res) => {
 app.post('/upload', uploadMid.single('file'), (req, res) => {
   const file = req.file
   const filename = req.body.filename
-  // console.log('filename', filename)
-  // const [, suffix] = /\.([a-zA-Z0-9]+)$/.exec(file.originalname)
-  // const stream = file.stream
   fs.writeFileSync(resolve(`./resource/${filename}`), file.buffer)
   res.send({ code: 1 })
 })
@@ -51,15 +59,15 @@ function sortFiles(files = []) {
   const len = files.length
   let minIndex, temp
   for (let i = 0; i < len - 1; i++) {
-      minIndex = i
-      for (let j = i + 1; j < len; j++) {
-          if (getFileIndex(files[j]) < getFileIndex(files[minIndex])) {     //寻找最小的数
-              minIndex = j                //将最小数的索引保存
-          }
+    minIndex = i
+    for (let j = i + 1; j < len; j++) {
+      if (getFileIndex(files[j]) < getFileIndex(files[minIndex])) {     //寻找最小的数
+        minIndex = j                //将最小数的索引保存
       }
-      temp = files[i]
-      files[i] = files[minIndex]
-      files[minIndex] = temp
+    }
+    temp = files[i]
+    files[i] = files[minIndex]
+    files[minIndex] = temp
   }
   return files
 }
@@ -78,15 +86,20 @@ function mergeFile(filename = '', hash = '') {
   })
   const buffer = Buffer.concat(filesBuffer)
   const savePath = /mp4|mov/i.test(filename) ?
-  resolve(`./resource/videos/${filename}`)
-  :
-  resolve(`./resource/${filename}`)
-  // fs.writeFileSync(resolve(`./resource/${filename}`), buffer)
+    resolve(`./resource/videos/${filename}`)
+    :
+    resolve(`./resource/${filename}`)
   fs.writeFileSync(savePath, buffer)
 }
 app.post('/merge', (req, res) => {
   const { filename, hash } = req.body
   mergeFile(filename, hash)
+  let list = fs.readFileSync(listJsonPath, { encoding: 'utf-8' })
+  list = JSON.parse(list)
+  if (!list.includes(filename)) {
+    list.unshift(filename)
+  }
+  fs.writeFileSync(listJsonPath, JSON.stringify(list), { encoding: 'utf-8' })
   res.send({ code: 1, filename })
 })
 

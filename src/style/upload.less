@@ -3,31 +3,75 @@
 }
 
 .container {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  max-width: 1200px;
+  width: calc(100% - 48px);
+  margin: 0 auto;
+}
+
+.app-header {
+  padding: 20px 0;
+  .container {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
 .upload-box {
-  width: 100%;
-  min-height: 300px;
-  max-width: 500px;
+  max-width: 200px;
+  padding: 12px;
   border-radius: 6px;
   border: var(--border-style);
-  box-shadow: 0 0 45px fade(@primary-color, 10);
+  box-shadow: 0 0 15px fade(@primary-color, 10);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: lighter;
-  font-size: 36px;
-  letter-spacing: 10px;
+  letter-spacing: 2px;
   color: var(--primary-color);
   cursor: pointer;
   span {
     user-select: none;
+  }
+}
+
+// 上传列表
+.upload-list {
+  .upload-list-item {
+    padding: 10px 50px 10px 10px;
+    list-style-type: none;
+    border-radius: 6px;
+    border: 1px solid var(--primary-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+    & ~ .upload-list-item {
+      margin-top: 20px;
+    }
+  }
+  .list-item-progress {
+    background-color: var(--primary-color);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+  }
+  .upload-count {
+    position: absolute;
+    background-color: #ccc;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    padding: 5px;
+    display: block;
+    border-radius: 6px;
+    box-shadow: 0 0 5px fade(#000, 50);
+    &.is-success {
+      background-color: var(--success-color);
+    }
   }
 }
 
